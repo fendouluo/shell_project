@@ -47,10 +47,10 @@ do
 	cd ${path}
 	if [ `$ffprobe_tool -show_streams $filename | grep -E "codec_name=h264|codec_name=hevc"` ]; then
     	echo "Don't need convert video!"
-	video_copy=true
+	    video_copy=true
 	else
-	echo "convert video to h264"
-	video_copy=false
+	    echo "convert video to h264"
+            video_copy=false
 	fi
 	echo $video_copy
 	
@@ -61,7 +61,7 @@ do
 	file_mediaAVinfo=$path/$filename.AVinfo
 	file_convert_cmd=$path/$filename.ffmpegcmdinfo
 	$ffmpeg_tool -i $filename 2>$file_mediainfo
-    file_ffmpeg_convert2_info=$path/$filename.bitrate.convertinfo
+        file_ffmpeg_convert2_info=$path/$filename.bitrate.convertinfo
 
 	video_index=0
 	index_video_steam=0
@@ -141,20 +141,31 @@ do
 		done < $file_mediaAVinfo
 
 		echo "index_first_audio_index:"$index_first_audio_index	
-		echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -i $filename   -c copy   -map 0 $video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2  $audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
+		echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -i $filename   -c copy   -map 0 \
+			$video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2  \
+			$audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
 		if [ "$file_fmt" == "mov" ];then
-			echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -enable_drefs 1 -use_absolute_path 1 -i $filename -i $filename   -c copy   -map 0:v -map 0:a -write_tmcd 1 $video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2  $audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
-			$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -enable_drefs 1 -use_absolute_path 1 -i $filename -i $filename   -c copy   -map 0:v -map 0:a -write_tmcd 1 $video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2  $audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info	
+			echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -enable_drefs 1 -use_absolute_path 1 -i $filename -i $filename  \
+				-c copy   -map 0:v -map 0:a -write_tmcd 1 $video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2 \
+				$audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
+			$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -enable_drefs 1 -use_absolute_path 1 -i $filename -i $filename   \
+				-c copy   -map 0:v -map 0:a -write_tmcd 1 $video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2 \
+			$audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
 		else
-			$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -i $filename   -c copy   -map 0 $video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2  $audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
+			$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -i $filename   -c copy   -map 0 $video_str \
+				-map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2 \
+				$audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
 		fi
 		else
-		echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename   -c copy  -map 0 $video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
+			echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename   -c copy  -map 0 \
+			$video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
 		if [ "$file_fmt" == "mov" ];then
-			echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -enable_drefs 1 -use_absolute_path 1   -c copy  -map 0:v -map 0:a -write_tmcd 1  $video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
-                	$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -enable_drefs 1 -use_absolute_path 1   -c copy  -map 0:v -map 0:a -write_tmcd 1  $video_str  $audio_str  special.mkc  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
+			echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -enable_drefs 1 -use_absolute_path 1   -c copy  -map 0:v -map 0:a -write_tmcd 1 \
+				$video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
+            $ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -enable_drefs 1 -use_absolute_path 1   -c copy  -map 0:v -map 0:a -write_tmcd 1 \
+				$video_str  $audio_str  special.mkc  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
 		else
-		$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename   -c copy  -map 0 $video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
+			$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename   -c copy  -map 0 $video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
 		fi
 	fi
 
