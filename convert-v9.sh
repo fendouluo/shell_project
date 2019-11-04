@@ -1,5 +1,5 @@
 #!/bin/bash
-#ffprobe version 4.1.3-static https://johnvansickle.com/ffmpeg/
+
 CONTENT_FILE=./movie_list.txt
 key_path="/diskD/long.wang/work/key/encrypt.keyinfo"
 ffmpeg_tool="/diskD/movie/ffmpeg"
@@ -34,12 +34,14 @@ do
 	echo "file_name is : "$file_name
 	
 	icnt=$[$icnt+1]
+	result=$(ls "$convert_path" | grep "$file_name")
+	echo "cmp is $result "	
 	
-	if [ `ls "$convert_path" | grep "$file_name"` ]; then
-    	echo "Don't need convert video!"
-	continue
+	if [ -d "$convert_path/$file_name" ]; then
+    	    echo "Dont't need convert video!"
+            continue
 	else
-	echo "convert video"
+	    echo "Don't need convert video"
 	fi
 
 	cd ${path}
@@ -162,7 +164,7 @@ do
 	rm special.mkv
 	
 	mkdir -p $convert_path/$file_name
-	mv  $file_mediainfo  $file_audioinfo  $file_videoinfo  $file_ffmpeg_convert_info  $file_mediaAVinfo $file_convert_cmd -t $convert_path/$file_name
+	mv $file_ffmpeg_convert2_info $file_mediainfo  $file_audioinfo  $file_videoinfo  $file_ffmpeg_convert_info  $file_mediaAVinfo $file_convert_cmd -t $convert_path/$file_name
 
 	mv $file_name.mkv $convert_path/$file_name
 	cp *.qn* $convert_path/$file_name
