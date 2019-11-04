@@ -41,7 +41,7 @@ do
     	    echo "Dont't need convert video!"
             continue
 	else
-	    echo "Don't need convert video"
+	    echo "Convert video"
 	fi
 
 	cd ${path}
