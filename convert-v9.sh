@@ -38,8 +38,8 @@ do
 	echo "cmp is $result "	
 	
 	if [ -d "$convert_path/$file_name" ]; then
-    	    echo "Dont't need convert video!"
-            continue
+    	echo "Dont't need convert video!"
+		continue
 	else
 	    echo "Convert video"
 	fi
@@ -47,10 +47,10 @@ do
 	cd ${path}
 	if [ `$ffprobe_tool -show_streams $filename | grep -E "codec_name=h264|codec_name=hevc"` ]; then
     	echo "Don't need convert video!"
-	    video_copy=true
+		video_copy=true
 	else
-	    echo "convert video to h264"
-            video_copy=false
+		echo "convert video to h264"
+		video_copy=false
 	fi
 	echo $video_copy
 	
@@ -61,7 +61,7 @@ do
 	file_mediaAVinfo=$path/$filename.AVinfo
 	file_convert_cmd=$path/$filename.ffmpegcmdinfo
 	$ffmpeg_tool -i $filename 2>$file_mediainfo
-        file_ffmpeg_convert2_info=$path/$filename.bitrate.convertinfo
+    file_ffmpeg_convert2_info=$path/$filename.bitrate.convertinfo
 
 	video_index=0
 	index_video_steam=0
@@ -76,7 +76,7 @@ do
 	video_str=" -pix_fmt yuv420p "
 	for var in ${video_type[@]} 
 	do 
-		echo "video type is ："$var
+		echo "video type is :"$var
 		if [ "$var" == "hevc" ]|| [ "$var" == "h264" ]; then
 			continue
 		else
@@ -101,7 +101,7 @@ do
 	audio_first_tpye=""
 	for var in ${audio_type[@]} 
 	do 
-		echo "audio type is ："$var
+		echo "audio type is :"$var
 		audio_first_tpye=$var
 		if [ "$var" == "ac3" ]|| [ "$var" == "dts" ] || [ "$var" == "aac" ]; then
 			continue
@@ -129,7 +129,9 @@ do
 		do
 			echo "current audio is:"$line
 			if [ "Audio" == `echo $line|awk '{print $3}'|sed 's/://g'` ]; then
-				if [ $audio_first_tpye == "aac" ]; then
+				if [ $audio_first_tpye == "ac3" ]; then
+					another_audio_steam_type="aac"
+				elif [ $audio_first_tpye == "aac" ]; then
 					another_audio_steam_type="ac3"
 				else
 					another_audio_steam_type="aac"
