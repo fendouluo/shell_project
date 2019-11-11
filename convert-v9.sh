@@ -129,10 +129,10 @@ do
 		do
 			echo "current audio is:"$line
 			if [ "Audio" == `echo $line|awk '{print $3}'|sed 's/://g'` ]; then
-				if [ $audio_first_tpye == "ac3" ]; then
-					another_audio_steam_type="aac"
-				else
+				if [ $audio_first_tpye == "aac" ]; then
 					another_audio_steam_type="ac3"
+				else
+					another_audio_steam_type="aac"
 				fi
 				break				
 			else
@@ -142,8 +142,8 @@ do
 
 		echo "index_first_audio_index:"$index_first_audio_index	
 		echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -i $filename   -c copy   -map 0 \
-			$video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2  \
-			$audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
+				$video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2  \
+				$audio_str   special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
 		if [ "$file_fmt" == "mov" ];then
 			echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -enable_drefs 1 -use_absolute_path 1 -i $filename -i $filename  \
 				-c copy   -map 0:v -map 0:a -write_tmcd 1 $video_str   -map 1:$index_first_audio_index  -c:a:1 $another_audio_steam_type -shortest -strict -2 \
@@ -158,20 +158,22 @@ do
 		fi
 		else
 			echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename   -c copy  -map 0 \
-			$video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
+				$video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
 		if [ "$file_fmt" == "mov" ];then
 			echo "$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -enable_drefs 1 -use_absolute_path 1   -c copy  -map 0:v -map 0:a -write_tmcd 1 \
 				$video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info" >$file_convert_cmd
             $ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename -enable_drefs 1 -use_absolute_path 1   -c copy  -map 0:v -map 0:a -write_tmcd 1 \
 				$video_str  $audio_str  special.mkc  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
 		else
-			$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename   -c copy  -map 0 $video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
+			$ffmpeg_tool  -fflags +genpts -y  -threads $cpu_num -i $filename   -c copy  -map 0 \
+				$video_str  $audio_str  special.mkv  < /dev/null 1>$file_ffmpeg_convert_info 2>$file_ffmpeg_convert_info
 		fi
 	fi
 
 	unset audio_type
 
-	$ffmpeg_tool -y -threads $cpu_num -i  special.mkv -map 0 -c:a copy -c:s copy  -b:v 5M -maxrate 10M $file_name.mkv < /dev/null 1>$file_ffmpeg_convert2_info 2>$file_ffmpeg_convert2_info
+	$ffmpeg_tool -y -threads $cpu_num -i  special.mkv -map 0 -c:a copy -c:s copy  \
+		-b:v 5M -maxrate 10M $file_name.mkv < /dev/null 1>$file_ffmpeg_convert2_info 2>$file_ffmpeg_convert2_info
 	rm special.mkv
 	
 	mkdir -p $convert_path/$file_name
